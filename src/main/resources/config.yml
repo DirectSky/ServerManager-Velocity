@@ -1,0 +1,16 @@
+# Pterodactyl Client API Key
+api-key: "PTERODACTYL-API-KEY"
+
+# Pterodactyl Pannel URL
+panel-url: ""
+
+# Connection check bei restart
+connect-check-interval: 3
+
+# Max warte zeit bei Server Start
+connect-timeout: 60
+
+# Server-Mappings
+servers:
+  lobby: "pterodactyl-server-id"
+

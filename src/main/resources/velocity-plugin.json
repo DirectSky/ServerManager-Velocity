@@ -1,0 +1,8 @@
+{
+  "id": "servermanager",
+  "name": "ServerManager",
+  "version": "1.0",
+  "description": "Velocity Server Manager",
+  "authors": ["DirectSky"],
+  "main": "de.sky.servermanager.ServerManagerPlugin"
+}

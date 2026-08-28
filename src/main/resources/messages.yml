@@ -1,0 +1,41 @@
+# ================================
+#   ServerManager - Messages
+# ================================
+# Placeholder:
+#   {time}   - verbleibende Zeit (z.B. 04:32)
+#   {server} - Servername
+
+
+# actionbar oder bossbar
+countdown-display: "bossbar"
+
+# Nur wenn countdown-display auf bossbar ist
+bossbar:
+  # Farben: PINK, BLUE, RED, GREEN, YELLOW, PURPLE, WHITE
+  color: ""
+  # Stil: PROGRESS, NOTCHED_6, NOTCHED_10, NOTCHED_12, NOTCHED_20
+  overlay: ""
+  # Balken läuft mit dem Countdown runter
+  animated-progress: true
+
+countdown:
+  # Countdown Warning Text
+  text: "<red>⚠ ꜱᴇʀᴠᴇʀ ɴᴇᴜꜱᴛᴀʀᴛ ɪɴ: <yellow>{time}"
+
+commands:
+  no-permission: "<red>✗ Du hast keine Berechtigung dafür."
+  server-not-found: "<red>✗ Server '{server}' nicht gefunden."
+  no-permission-server: "<red>✗ Du hast keine Berechtigung für diesen Server."
+  start-sending: "<yellow>⏳ ꜱᴛᴀʀᴛᴇ ꜱᴇʀᴠᴇʀ '{server}'..."
+  start-sent: "<green>✓ ꜱᴛᴀʀᴛʙᴇꜰᴇʜʟ ɢᴇꜱᴇɴᴅᴇᴛ! ᴡᴀʀᴛᴇ ʙɪꜱ ᴅᴇʀ ꜱᴇʀᴠᴇʀ ᴏɴʟɪɴᴇ ɪꜱᴛ..."
+  start-online: "<green>✓ ꜱᴇʀᴠᴇʀ ɪꜱᴛ ᴏɴʟɪɴᴇ! ᴠᴇʀʙɪɴᴅᴇ..."
+  start-timeout: "<red>✗ Timeout: Server '{server}' ist nach {time}s noch nicht online."
+  start-not-registered: "<red>✗ Server nicht in velocity.toml registriert."
+  stop-sending: "<yellow>⏳ ꜱᴛᴏᴘᴘᴇ ꜱᴇʀᴠᴇʀ '{server}'..."
+  stop-sent: "<green>✓ ꜱᴇʀᴠᴇʀ '{server}' ᴡɪʀᴅ ɢᴇꜱᴛᴏᴘᴘᴛ."
+  stop-error: "<red>✗ Fehler beim Stoppen. Prüfe die Logs."
+  restart-now: "<red>⚠ ꜱᴇʀᴠᴇʀ '{server}' ᴡɪʀᴅ ᴊᴇᴛᴢᴛ ɴᴇᴜ ɢᴇꜱᴛᴀʀᴛᴇᴛ."
+  restart-scheduled: "<yellow>⚠ ꜱᴇʀᴠᴇʀ '{server}' ᴡɪʀᴅ ɪɴ {time} ᴍɪɴᴜᴛᴇ(ɴ) ɴᴇᴜ ɢᴇꜱᴛᴀʀᴛᴇᴛ."
+  restartall-now: "<red>⚠ ᴀʟʟᴇ ꜱᴇʀᴠᴇʀ ᴡᴇʀᴅᴇɴ ᴊᴇᴛᴢᴛ ɴᴇᴜ ɢᴇꜱᴛᴀʀᴛᴇᴛ!"
+  restartall-scheduled: "<yellow>⚠ ᴀʟʟᴇ ꜱᴇʀᴠᴇʀ ᴡᴇʀᴅᴇɴ ɪɴ {time} ᴍɪɴᴜᴛᴇ(ɴ) ɴᴇᴜ ɢᴇꜱᴛᴀʀᴛᴇᴛ."
+  invalid-time: "<red>✗ Ungültige Zeit. Nutze eine Zahl (Minuten) oder 'now'."

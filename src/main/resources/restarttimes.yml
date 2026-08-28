@@ -1,0 +1,19 @@
+# Zeitzone z.B. "Europe/Berlin", "UTC", "America/New_York"
+timezone: "Europe/Berlin"
+
+# Restart-Zeiten pro Server
+# Name muss in der config.yml sein
+#
+# Format:
+#   time: HH:mm
+#   days: *           (jeden Tag)
+#   days: mo,di,mi,do,fr,sa,so   (Wochentage)
+#
+restarttimes:
+  servername:
+    - time: "00:00"
+      days: "*"
+    - time: "08:00"
+      days: "*"
+    - time: "16:00"
+      days: "*"

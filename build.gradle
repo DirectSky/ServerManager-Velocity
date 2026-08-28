@@ -1,0 +1,39 @@
+plugins {
+    id 'java'
+    id 'com.gradleup.shadow' version '8.3.0'
+}
+
+group = 'de.sky'
+version = '1.0'
+
+repositories {
+    mavenCentral()
+    maven { url 'https://repo.papermc.io/repository/maven-public/' }
+    maven { url 'https://repo.ajg0702.us/releases' }
+}
+
+dependencies {
+    compileOnly 'com.velocitypowered:velocity-api:3.3.0-SNAPSHOT'
+    annotationProcessor 'com.velocitypowered:velocity-api:3.3.0-SNAPSHOT'
+    compileOnly 'us.ajg0702.queue.api:api:2.9.1'
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    implementation 'org.spongepowered:configurate-yaml:4.1.2'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+shadowJar {
+    archiveClassifier.set('')
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    relocate 'okhttp3', 'de.sky.servermanager.libs.okhttp3'
+    relocate 'okio', 'de.sky.servermanager.libs.okio'
+    relocate 'org.spongepowered.configurate', 'de.sky.servermanager.libs.configurate'
+}
+
+build {
+    dependsOn shadowJar
+}
