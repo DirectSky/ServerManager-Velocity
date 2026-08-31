@@ -1,173 +1,220 @@
-# ExecutableItems
+# ServerManager
 
-A lightweight [Paper](https://papermc.io/) plugin that lets you link one or multiple commands to any item — players right-click to execute them. No GUI setup, no per-use-case plugins needed. Just link, save, give.
+A Velocity plugin for managing Minecraft servers through the Pterodactyl API.
 
----
+
+## Features
+
+* Start, Stop and Restart Pterodactyl servers via Command
+* Scheduled automatic restarts
+* Configurable restart times and days of the week
+* Configurable messages
+* Permission-based commands
+* Fully configurable through YAML files
+
+## Requirements
+
+* Velocity
+* Java 21 or newer
+* A Pterodactyl panel
+* A Pterodactyl API token
+* Network access from the Velocity proxy to the Pterodactyl API
+
+## Installation
+
+1. Download the latest ServerManager release.
+2. Place the plugin JAR into the `plugins` directory of your Velocity proxy.
+3. Start the Proxy.
+4. Configure everything in the config.
+5. Restart the Proxy.
+
+After installation, ServerManager will create its configuration files in:
+
+```text
+plugins/ServerManager/
+```
+
+## Configuration
+
+ServerManager uses separate configuration files for different parts of the plugin.
+
+### `config.yml`
+
+The main configuration file contains the Pterodactyl connection and server definitions.
+
+Example:
+
+```yaml
+pterodactyl:
+  url: "https://panel.example.com"
+  api-key: "YOUR_API_KEY"
+
+servers:
+  lobby:
+    id: "SERVER_ID"
+  survival:
+    id: "SERVER_ID"
+```
+
+The exact configuration options depend on the version of ServerManager you are using. Refer to the generated configuration file for the available options.
+
+### `messages.yml`
+
+All messages can be customized in the `messages.yml`.
+
+
+### `restarttimes.yml`
+
+Scheduled restarts are configured in the `restarttimes.yml`.
+
+Restart schedules support specific times, days of the week, and timezones.
+
+Example:
+
+```yaml
+timezone: "Europe/Berlin"
+
+restart-times:
+  - "00:00"
+  - "08:00"
+  - "16:00"
+```
 
 
 ## Commands
 
-All commands are available as `/executableitems` or the short alias `/ei`.
+### `/startserver`
 
-### Item setup
+Starts a Server.
 
-| Command | Description |
-|---|---|
-| `/ei link add <command> [player\|op]` | Add a command to the held item |
-| `/ei link remove <index>` | Remove a specific command by its index |
-| `/ei unlink` | Remove **all** EI data from the held item |
-| `/ei onaction <type> [args]` | Set what happens to the item after use |
-| `/ei cooldown <seconds>` | Per-item cooldown override (`-1` = use global) |
-| `/ei permission <node\|remove>` | Restrict item use to a permission node |
-| `/ei info` | Show all linked data of the held item |
-| `/ei copy` | Copy all EI data from the held item |
-| `/ei paste` | Paste copied EI data onto another item |
+```text
+/startserver <server>
+```
 
-### Registry
 
-| Command | Description |
-|---|---|
-| `/ei save <name>` | Save the held item to the registry |
-| `/ei give <player> <name> [amount]` | Give a saved item to a player |
-| `/ei rename <old> <new>` | Rename a saved item in the registry |
+### `/stopserver`
 
-### General
+Stops a Server.
 
-| Command | Description |
-|---|---|
-| `/ei help` | Show the help page |
-| `/ei reload` | Reload `config.yml` and `items.yml` |
+```text
+/stopserver <server>
+```
 
----
+### `/restartserver`
 
-## On-Action Types
+Restarts a Server.
 
-Set what happens to the item **after** the command(s) execute.
+```text
+/restartserver <server> <time>
+```
 
-| Type | Usage | Description |
-|---|---|---|
-| `clear single` | `/ei onaction clear single` | Remove 1 from the stack |
-| `clear slot` | `/ei onaction clear slot` | Remove the entire stack |
-| `damage <n>` | `/ei onaction damage 10` | Reduce durability by N (breaks at 0) |
-| `count <n>` | `/ei onaction count 3` | Reduce stack size by N |
-| `drop` | `/ei onaction drop` | Drop the item on use |
-| `remove` | `/ei onaction remove` | Remove the on-action setting |
+Examples:
 
----
+```text
+/restartserver survival 30s
+/restartserver survival 5m
+/restartserver survival 2h
+/restartserver survival now
+```
+
+
+### `/restartallservers`
+
+Restarts all Servers.
+
+```text
+/restartallservers <time>
+```
+
+Examples:
+
+```text
+/restartallservers 10m
+/restartallservers 1h
+/restartallservers now
+```
 
 ## Permissions
 
-| Permission | Description | Default |
-|---|---|---|
-| `executableitems.use` | Use (right-click) linked items | `true` |
-| `executableitems.link` | Link, unlink, copy/paste, onaction, cooldown, permission setup | `op` |
-| `executableitems.info` | View linked data of an item | `op` |
-| `executableitems.bypass.cooldown` | Bypass the cooldown | `op` |
-| `executableitems.save` | Save and rename items in the registry | `op` |
-| `executableitems.give` | Give saved items to players | `op` |
-| `executableitems.reload` | Reload the config | `op` |
 
----
+| Permission                        | Description                            |
+| --------------------------------- | -------------------------------------- |
+| `servermanager.startserver`       | Allows the use of `/startserver`       |
+| `servermanager.stopserver`        | Allows the use of `/stopserver`        |
+| `servermanager.restartserver`     | Allows the use of `/restartserver`     |
+| `servermanager.restartallservers` | Allows the use of `/restartallservers` |
 
-## Configuration
+## Pterodactyl API
 
-```yaml
-# config.yml
+ServerManager communicates with Pterodactyl using its Client API.
 
-cooldown: 5       # Global cooldown in seconds — 0 to disable
+### Creating an API Key
 
-defaults:
-  run-as: player  # Default execution mode: player or op
+1. Log into your Pterodactyl panel.
+2. Open your account settings.
+3. Navigate to the API credentials section.
+4. Create a new API key.
+5. Copy the generated key.
+6. Add the key to the Config.
 
-messages:
-  prefix: "&8[&bEI&8] "
-  linked: "&aCommand added to item!"
-  unlinked: "&cAll EI data removed from item."
-  not-linked: "&cThis item has no linked command."
-  no-permission: "&cYou don't have permission to do that."
-  no-item-in-hand: "&cYou must hold an item in your hand."
-  cooldown: "&cPlease wait &e%seconds% &cmore second(s)."
-  # ... all messages are fully configurable
-```
+The API key should be treated as a secret and must never be committed to a public repository.
 
----
 
-## Placeholders
+## Building from Source
 
-| Placeholder | Value |
-|---|---|
-| `%player%` | The name of the player who used the item |
+ServerManager uses Gradle as its build system.
 
----
-
-## Usage Examples
-
-### Single-use voucher
-```
-/ei link add give %player% diamond 5
-/ei onaction clear single
-```
-Gives the player 5 diamonds and removes one item from the stack on use.
-
-### Kit item with cooldown
-```
-/ei link add lootcrates give %player% starter 1 op
-/ei cooldown 300
-/ei save starter-kit
-```
-Executes the command as console, applies a 5-minute per-item cooldown, and saves it to the registry for distribution.
-
-### Multiple commands in order
-```
-/ei link add give %player% diamond 1
-/ei link add broadcast %player% just got a diamond!
-/ei link add title %player% title {"text":"You got it!"}
-```
-All three commands execute in order on right-click.
-
-### VIP-only item
-```
-/ei link add give %player% emerald 3
-/ei permission vip.items.emerald
-```
-Only players with `vip.items.emerald` can use this item.
-
-### Distributing a saved item
-```
-/ei give Sky starter-kit 1
-```
-
----
-
-## Requirements
-
-| | |
-|---|---|
-| Server | [Paper](https://papermc.io/) 1.21.x |
-| Java | 21+ |
-
----
-
-## Installation
-
-1. Download the latest release JAR from the [Releases](../../releases) page
-2. Drop it into your server's `plugins/` folder
-3. Start or reload the server
-4. Edit `plugins/ExecutableItems/config.yml` as needed
-5. Use `/ei reload` to apply config changes in-game
-
----
-
-## Building from source
+Build the plugin:
 
 ```bash
-git clone https://github.com/DirectSky943/ExecutableItems.git
-cd ExecutableItems
 ./gradlew build
 ```
 
-Output JAR: `build/libs/ExecutableItems-1.0.0.jar`
+On Windows:
 
----
+```powershell
+gradlew.bat build
+```
 
-*Made by **Sky** — [skyymc.net](https://skyymc.net)*
+The compiled JAR will be available in:
+
+```text
+build/libs/
+```
+
+
+## Security
+
+Never expose your Pterodactyl API key.
+
+Do not commit credentials to Git or include them in public configuration files.
+
+If an API key is accidentally exposed, revoke it immediately through the Pterodactyl panel and generate a new one.
+
+## Compatibility
+
+| Component         | Requirement            |
+| ----------------- | ---------------------- |
+| Proxy             | Velocity               |
+| Java              | 21+                    |
+| Server Panel      | Pterodactyl            |
+
+Compatibility may vary depending on the Velocity and Java versions used by your network.
+
+
+## Issues
+
+If you encounter a bug or have a feature request, open an issue in the GitHub repository.
+
+When reporting a bug, include:
+
+* ServerManager version
+* Velocity version
+* Java version
+* Pterodactyl version
+* Relevant configuration
+* Console errors or stack traces
+* Steps required to reproduce the issue
+
+Remove any API keys, tokens, passwords, or other sensitive information before posting logs or configuration files.
+
